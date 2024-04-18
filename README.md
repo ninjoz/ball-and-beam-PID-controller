@@ -1,1 +1,1 @@
-# ball-beam-PID-controller-flutter-app
+# ball-and-beam-PID-controller-flutter-app
