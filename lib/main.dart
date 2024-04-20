@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 final _formKey = GlobalKey<FormState>();
 double sliderValue = 0;
 double inputValue = 0;
@@ -86,14 +87,26 @@ class mainPage extends State<ControlPage> {
   Widget buildApplyButton() => Builder(
         builder: (context) => ElevatedButton(
           onPressed: () async {
-            lastAppliedValue = sliderValue;
-            if (_formKey.currentState!.validate()) {
-              lastAppliedValue = inputValue;
+            try {
+              await applyDistance();
+            } catch (e) {
+              print('Error: $e');
             }
           },
           child: const Text('Apply'),
         ),
       );
+
+  Future<void> applyDistance() async {
+    setState(() {
+      lastAppliedValue = sliderValue;
+    });
+
+    if (_formKey.currentState!.validate()) {
+      
+      setState(() {lastAppliedValue = inputValue;});
+    }
+  }
 
   Widget buildLastAppliedDis() => Text(
         'Last Applied Distance',
