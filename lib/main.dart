@@ -35,41 +35,53 @@ class mainPage extends State<ControlPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
+          backgroundColor:Color.fromARGB(255, 75,0,130),
           title: Text(
-            'distance controlling'.toUpperCase(),
+            'distance controlling'.toUpperCase(),style: TextStyle(fontSize: 33,color:Color.fromARGB(255, 242, 237, 241),),
           ),
         ),
         body: Form(
           key: _formKey,
           child: ListView(
             children: [
-              Text('Please Choose a Distance Between 0 to 40 cm'),
-              Row(
-                children: [
-                  buildSlideLable(0.0),
-                  Expanded(child:buildSlidingBar(),
-                  
-                  ),
-                  buildSlideLable(40.0),
-                ]
+              Text('Please Choose a Distance Between 0 to 40 cm',style :TextStyle(fontSize: 15,color:Color.fromARGB(7,200,160,155))),
+              Row(children: [
+                
+                buildSlideLable('   0'),
+                
+                Expanded(
+                  child: buildSlidingBar(),
+                ),
+                buildSlideLable('40   '),
 
-              )
-              ,
-              Text('Distance:'),
-              buildDistanceInput(),
+              ]),
+              const SizedBox(height: 16,),
+              Row(children: [
+                Text('  Distance:  ',style:TextStyle(fontSize: 25,color:Color.fromARGB(255, 75,0,130))),
+                Expanded(
+                  child: buildDistanceInput(),
+                ),
+              ]),
+              const SizedBox(height: 16,),
               buildApplyButton(),
-              Text('Last Applied Distance'),
-              Text(
-                '$lastAppliedValue',
-              ),
+              const SizedBox(height: 16,),
+              Row(children: [
+                Text('  Last Applied Distance : ',style:TextStyle(fontSize: 25,color:Color.fromARGB(255, 75,0,130),),),
+                Expanded(
+                  child: Text(
+
+                    '$lastAppliedValue',style:TextStyle(fontSize: 25,color:Color.fromARGB(255, 75,0,130),),
+                  ),
+                ),
+              ]),
             ],
           ),
         ),
       );
-  Widget buildSlideLable(double value) => Container(
+  Widget buildSlideLable(String value) => Container(
       width: 25,
       child: Text(
-        value.round().toString(),
+        value,
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ));
   Widget buildSlidingBar() => SizedBox(
@@ -126,6 +138,7 @@ class mainPage extends State<ControlPage> {
     if (_formKey.currentState!.validate()) {
       setState(() {
         lastAppliedValue = inputValue;
+        _formKey.currentState?.reset();
       });
     }
   }
