@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 final _formKey = GlobalKey<FormState>();
 double sliderValue = 0;
 double inputValue = 0;
@@ -45,7 +44,17 @@ class mainPage extends State<ControlPage> {
           child: ListView(
             children: [
               Text('Please Choose a Distance Between 0 to 40 cm'),
-              buildSlidingBar(),
+              Row(
+                children: [
+                  buildSlideLable(0.0),
+                  Expanded(child:buildSlidingBar(),
+                  
+                  ),
+                  buildSlideLable(40.0),
+                ]
+
+              )
+              ,
               Text('Distance:'),
               buildDistanceInput(),
               buildApplyButton(),
@@ -57,25 +66,37 @@ class mainPage extends State<ControlPage> {
           ),
         ),
       );
-
-  Widget buildSlidingBar() => Slider(
-        value: (inputValue >= 0 && inputValue <= 40) ? inputValue : 0.0,
-        min: 0,
-        max: 40,
-        onChanged: (value) => setState(() {
-          inputValue = sliderValue = value;
-        }),
+  Widget buildSlideLable(double value) => Container(
+      width: 25,
+      child: Text(
+        value.round().toString(),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ));
+  Widget buildSlidingBar() => SizedBox(
+        width: 300,
+        child: Slider(
+          value: (inputValue >= 0 && inputValue <= 40) ? inputValue : 0.0,
+          min: 0,
+          max: 40,
+          divisions: 40,
+          label: sliderValue.round().toString(),
+          onChanged: (value) => setState(() {
+            inputValue = sliderValue = value;
+          }),
+        ),
       );
   Widget buildDistanceInput() => TextFormField(
         validator: (value) {
-          if (double.parse(value!) >= 0 && double.parse(value!) <= 40) {
+          if (double.parse(value!) >= 1 && double.parse(value!) <= 40) {
             return null;
+          } else if (value[1] == '.' || value[0] == '.') {
+            return 'Please Enter An Integer Number';
           } else {
             return 'You Are Out Of Range';
           }
         },
         keyboardType: TextInputType.numberWithOptions(decimal: true),
-        maxLength: 5,
+        maxLength: 2,
         onChanged: (value) => setState(() {
           inputValue = double.parse(value);
         }),
@@ -103,8 +124,9 @@ class mainPage extends State<ControlPage> {
     });
 
     if (_formKey.currentState!.validate()) {
-      
-      setState(() {lastAppliedValue = inputValue;});
+      setState(() {
+        lastAppliedValue = inputValue;
+      });
     }
   }
 
