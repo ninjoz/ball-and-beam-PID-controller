@@ -1,5 +1,4 @@
 //sensor parameters
-
 #define echoPin1  6  // controlled by car/app
 #define trigPin1  5
 #define echoPin2  11 // controlled by cube
@@ -7,15 +6,18 @@
 
 
 // sum for computing the average raw sensor value
+float d1 = 0;
+float d2 = 0;
+float d3 = 0;
 float distance;
 
 // motor parameters
 #include <Servo.h>
 Servo servo_motor; 
-int servoMotorPin = 3;        // the servo motor is attached to the 9th Pulse Width Modulation (PWM)Arduino output
+int servoMotorPin = 9;        // the servo motor is attached to the 9th Pulse Width Modulation (PWM)Arduino output
 
 
-// control parameters
+// control parameters8
 float desiredPosition=20;     // desired position of the ball
 float errorK;                 // position error at the time instant k
 float errorKm1=0;             // position error at the time instant k-1
@@ -24,8 +26,8 @@ float controlK=0;             // control signal at the time instant k
 float controlKm1=0;           // control signal at the time instant k-1
 int delayValue=0;             // additional delay in [ms]
 
-float Kp=0.005;            //0.00001 0.00001 25            // proportional control 
-float Ki=0.0000001;                         // integral control
+float Kp=0.0002;            //0.00001 0.00001 25     0.03 0.000001 0       // proportional control 
+float Ki=0.000001;                         // integral control
 float Kd=0;                        // derivative control
 float h=(delayValue+32)*0.00001;       // discretization constant, that is equal to the total control loop delay, the number 32 is obtained by measuring the time it takes to execute a single loop iteration                         
 
@@ -44,6 +46,8 @@ void setup()
   pinMode(echoPin2, INPUT);
 
   servo_motor.attach(servoMotorPin);
+  servo_motor.write(90);
+  delay(200);
 }
 
 void loop() 
@@ -51,8 +55,12 @@ void loop()
 //  unsigned long startTime = micros(); // this is used to measure the time it takes for the code to execute
   // obtain the sensor measurements
   
-
-  distance = measure_1();
+  d1 = d2;
+  d2 = d3;
+  d3 = measure_1();
+  distance = (d3 + d2 + d1) / 3;
+  
+  
 
   
   errorK=desiredPosition-distance; // error at the time instant k;
@@ -87,7 +95,7 @@ int ff=94+controlK;
  // unsigned long deltaTime=endTime-startTime;
  // Serial.println(deltaTime);
   
-  delay(100); // uncomment this to introduce an additional delay
+  delay(10); // uncomment this to introduce an additional delay
  
 }
 
