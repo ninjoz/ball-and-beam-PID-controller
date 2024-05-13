@@ -1,4 +1,5 @@
 //sensor parameters
+
 #define echoPin1  6  // controlled by car/app
 #define trigPin1  5
 #define echoPin2  11 // controlled by cube
@@ -26,10 +27,12 @@ float controlK=0;             // control signal at the time instant k
 float controlKm1=0;           // control signal at the time instant k-1
 int delayValue=0;             // additional delay in [ms]
 
-float Kp=0.0002;            //0.00001 0.00001 25     0.03 0.000001 0       // proportional control 
-float Ki=0.000001;                         // integral control
-float Kd=0;                        // derivative control
+float Kp=0.0025;            //0.00001 0.00001 25     0.03 0.000001 0       // proportional control 
+float Ki=0.000015;                         // integral control
+float Kd=0.2;                        // derivative control
 float h=(delayValue+32)*0.00001;       // discretization constant, that is equal to the total control loop delay, the number 32 is obtained by measuring the time it takes to execute a single loop iteration                         
+float servoAngle;
+
 
 float keK=Kp*(1+h/Ki+Kd/h);               // parameter that multiplies the error at the time instant k
 float keKm1=-Kp*(1+2*Kd/h);               // parameter that multiplies the error at the time instant k-1                    
@@ -73,12 +76,16 @@ void loop()
   errorKm2=errorKm1;
   errorKm1=errorK;
 
-  servo_motor.write(94+controlK); // the number 94 is the control action necessary to keep the ball in the horizontal position
+  servoAngle = 94+controlK;
+
+  if(servoAngle < 70)servoAngle = 70;
+  if(servoAngle > 120)servoAngle = 120;
+
+  servo_motor.write(servoAngle); // the number 94 is the control action necessary to keep the ball in the horizontal position
  // Serial.println((String)"Control:"+controlK+(String)"---Error:"+errorK);
 
  // these three lines are used to plot the data using the Arduino serial plotter 
    //Serial.println("error ");
-int ff=94+controlK;
 // Serial.println("error ");
 
 //   Serial.println("controlk ");
