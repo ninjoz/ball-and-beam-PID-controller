@@ -1,3 +1,4 @@
+
 //sensor parameters
 
 #define echoPin1  6  // controlled by car/app
@@ -32,7 +33,7 @@ float setpoint = 20;
 int period = 10;
 float elapsedTime, time, timePrev;        //Variables for time control
 float distance_previous_error, distance_error;
-float PID_p, PID_i, PID_d, PID_total;
+float PID_p, PID_i, PID_d, PID_total, PID_total_last;
 
 float kp=4.8;            
 float ki=0.1;                         
@@ -63,6 +64,7 @@ void setup()
 
   servo_motor.attach(servoMotorPin);
   servo_motor.write(90);
+  PID_total_last = 300;
   delay(200);
 
 }
@@ -115,6 +117,7 @@ void loop()
 
 
     if(from_sensor){
+          delay(30);
             setpoint = measure_2();
 
     }
@@ -146,16 +149,22 @@ void loop()
     if(PID_total < 25){PID_total = 25;}
     if(PID_total > 120) {PID_total = 120; } 
 
-    if(distance_error < -1 || distance_error > 1){
-      servo_motor.write((int) PID_total+30);  
+    if((distance_error < -1 || distance_error > 1) && (abs(PID_total-PID_total_last) > 3)){
+      servo_motor.write((int) PID_total+30);
+      Serial.println(distance);
+      // Serial.println((int) PID_total+30); 
+      Serial.println("->>");
+      Serial.println(i);
+      
     }
     distance_previous_error = distance_error;
-
+    PID_total_last = PID_total;
     
     
   }
   
-
+  Serial.println("->>");
+  Serial.println(i);
   
   delay(10); // uncomment this to introduce an additional delay
  
@@ -207,6 +216,8 @@ delay(10);
 if (distanza > 42) distanza=43;
 else if (distanza < 0) distanza=0;
 
+Serial.println("->");
+Serial.println(distanza);
 return (distanza);   // meters   
 
 }
