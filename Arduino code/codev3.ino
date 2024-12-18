@@ -84,15 +84,17 @@ void loop()
       from_app = false;
       from_sensor = false;
       setpoint = 20;
+      Serial.println("Center");
 
     }else if(i == 1){
-
+      Serial.println("Taking input from app");
       from_app = true;
 
 
     }else if(i == 2){
       from_app = false;
       from_sensor = true;
+      Serial.println("Taking input from sensor");
 
     }
 
@@ -125,8 +127,11 @@ void loop()
     if(from_app){
           if (Serial.available() > 0) {
           int serialMessage = Serial.parseInt();
+          delay(10);
+          Serial.print("new setpoint : ");
+          Serial.println(serialMessage);
           setpoint = serialMessage;
-  }
+        }
     }
 
     distance_error = setpoint - distance;   
