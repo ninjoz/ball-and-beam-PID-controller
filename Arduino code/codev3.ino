@@ -1,4 +1,3 @@
-
 //sensor parameters
 
 #define echoPin1  6  // controlled by car/app
@@ -29,15 +28,15 @@ int servoMotorPin = 9;
 
 
 
-float setpoint = 20;
+float setpoint = 22;
 int period = 10;
 float elapsedTime, time, timePrev;        //Variables for time control
 float distance_previous_error, distance_error;
 float PID_p, PID_i, PID_d, PID_total, PID_total_last;
 
-float kp=4.8;            
-float ki=0.1;                         
-float kd=430;                       
+float kp=6.3;            
+float ki=0.25;                         
+float kd=380;                       
      
 float servoAngle;
 
@@ -83,7 +82,7 @@ void loop()
     if(i == 0){
       from_app = false;
       from_sensor = false;
-      setpoint = 20;
+      setpoint = 22;
       Serial.println("Center");
 
     }else if(i == 1){
@@ -156,10 +155,10 @@ void loop()
 
     if((distance_error < -1 || distance_error > 1) && (abs(PID_total-PID_total_last) > 3)){
       servo_motor.write((int) PID_total+30);
-      Serial.println(distance);
-      // Serial.println((int) PID_total+30); 
-      Serial.println("->>");
-      Serial.println(i);
+      Serial.println(PID_total+30);
+      // // Serial.println((int) PID_total+30); 
+      // Serial.println("->>");
+      // Serial.println(i);
       
     }
     distance_previous_error = distance_error;
@@ -168,8 +167,8 @@ void loop()
     
   }
   
-  Serial.println("->>");
-  Serial.println(i);
+  // Serial.println("->>");
+  // Serial.println(i);
   
   delay(10); // uncomment this to introduce an additional delay
  
@@ -221,8 +220,8 @@ delay(10);
 if (distanza > 42) distanza=43;
 else if (distanza < 0) distanza=0;
 
-Serial.println("->");
-Serial.println(distanza);
+// Serial.println("->");
+// Serial.println(distanza);
 return (distanza);   // meters   
 
 }
